@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ruedap/go-alfred"
 )
 
 func main() {
@@ -29,20 +31,55 @@ func main() {
 
 	u := t.UTC()
 
-	fmt.Println(t.Unix())
-	if t.Nanosecond() > 0 {
-		fmt.Println(t.UnixNano())
-	}
+	r := alfred.NewResponse()
 
-	fmt.Printf("%04d-%02d-%02d %02d:%02d:%02d\n", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
-
-	fmt.Println(t.Format(time.RFC3339))
-	fmt.Println(u.Format(time.RFC3339))
+	r.AddItem(&alfred.ResponseItem{
+		Valid: true,
+		Title: fmt.Sprint(t.Unix()),
+	})
 
 	if t.Nanosecond() > 0 {
-		fmt.Println(t.Format(time.RFC3339Nano))
-		fmt.Println(u.Format(time.RFC3339Nano))
+		r.AddItem(&alfred.ResponseItem{
+			Valid: true,
+			Title: fmt.Sprint(t.UnixNano()),
+		})
 	}
+
+	r.AddItem(&alfred.ResponseItem{
+		Valid: true,
+		Title: fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second()),
+	})
+
+	r.AddItem(&alfred.ResponseItem{
+		Valid: true,
+		Title: fmt.Sprint(t.Format(time.RFC3339)),
+	})
+	r.AddItem(&alfred.ResponseItem{
+		Valid: true,
+		Title: fmt.Sprint(u.Format(time.RFC3339)),
+	})
+
+	if t.Nanosecond() > 0 {
+		r.AddItem(&alfred.ResponseItem{
+			Valid: true,
+			Title: fmt.Sprint(t.Format(time.RFC3339Nano)),
+		})
+		r.AddItem(&alfred.ResponseItem{
+			Valid: true,
+			Title: fmt.Sprint(u.Format(time.RFC3339Nano)),
+		})
+	}
+
+	xml, err := r.ToXML()
+	if err != nil {
+		title := fmt.Sprintf("Error: %v", err.Error())
+		subtitle := "Time Workflow Error"
+		arg := title
+		errXML := alfred.ErrorXML(title, subtitle, arg)
+		fmt.Println(errXML)
+	}
+
+	fmt.Println(xml)
 }
 
 func parse(input string) (time.Time, error) {

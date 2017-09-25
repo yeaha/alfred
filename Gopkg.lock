@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/ruedap/go-alfred"
+  packages = ["."]
+  revision = "43da5a9945937f63f00ecf71042ef4df295ce84d"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
@@ -10,6 +16,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4bfe0a295f998a250c53fcf0757ab85c1ab64e8cfbfd362e37614b3c7ee0e3db"
+  inputs-digest = "78143241adcbf153f97a42c0d3215f1249b59e53cd6e751bf613e1325323ad71"
   solver-name = "gps-cdcl"
   solver-version = 1
